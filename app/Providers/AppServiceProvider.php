@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use ApiPlatform\State\Processor\WriteProcessor;
+use App\State\AppWriteProcessor;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,5 +24,9 @@ class AppServiceProvider extends ServiceProvider
         //
 
         // $this->app->tag(AppWriteProcessor::class, ProcessorInterface::class);
+
+        $this->app->extend(WriteProcessor::class, function (WriteProcessor $inner) {
+            return new AppWriteProcessor($inner);
+        });
     }
 }
