@@ -13,7 +13,7 @@ use App\Attribute\SkipAutoconfigure;
 final class AppWriteProcessor implements ProcessorInterface
 {
     public function __construct(
-        private readonly mixed $decorated,
+        private readonly WriteProcessor $decorated,
     ) {
     }
 
