@@ -18,7 +18,16 @@ final class AppWriteProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
         assert($this->decorated instanceof WriteProcessor);
-        
+
+        // whether the CallableProcessor owned by WriteProcessor includes AppWriteProcessor, which is a system provider
+        $callableProcessorRef = new \ReflectionProperty($this->decorated, 'callableProcessor');
+        $callableProcessor = $callableProcessorRef->getValue($this->decorated);
+        $locatorRef = new \ReflectionProperty($callableProcessor, 'locator');
+        $locator = $locatorRef->getValue($callableProcessor);
+        $servicesRef = new \ReflectionProperty($locator, 'services');
+        $services = $servicesRef->getValue($locator);
+        assert(in_array(self::class, array_map(fn (object $service) => $service::class, array_values($services)), true) === true);
+
         return $this->decorated->process($data, $operation, $uriVariables, $context);
     }
 }
